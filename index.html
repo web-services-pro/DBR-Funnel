@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asset Monetization Audit - Calculate Amount of Revenue Leakage To Recover With Database Reactivation Automation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Dark Mode "Service Storm" Aesthetic */
+        body { background-color: #020617; font-family: 'Inter', sans-serif; color: white; }
+        
+        /* Glassmorphism Card */
+        .quiz-card { 
+            background: rgba(30, 41, 59, 0.5); 
+            border: 1px solid rgba(71, 85, 105, 0.5); 
+            backdrop-filter: blur(10px); 
+        }
+        
+        /* Option Buttons */
+        .option-btn { 
+            transition: all 0.2s; 
+            border: 1px solid rgba(71, 85, 105, 0.5); 
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .option-btn:hover { 
+            background-color: rgba(59, 130, 246, 0.2); 
+            border-color: #3b82f6; 
+            transform: translateY(-2px); 
+        }
+        
+        /* Steps Logic */
+        .hidden-step { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 left-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="max-w-xl w-full">
+        <div class="mb-6">
+            <div class="flex justify-between text-xs text-slate-400 mb-2">
+                <span>Asset Audit Progress</span>
+                <span>Step <span id="currentStepNum">1</span> of 11</span>
+            </div>
+            <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+                <div id="progressBar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-500" style="width: 9%"></div>
+            </div>
+        </div>
+
+        <div class="quiz-card rounded-2xl p-6 md:p-10 shadow-2xl relative">
+            <form id="quizForm">
+                
+                <div class="step fade-in" data-step="1">
+                    <h2 class="text-2xl font-bold mb-2">1. Inventory Analysis</h2>
+                    <p class="text-slate-400 mb-6">Estimate the number of unconverted leads or past clients currently sitting in your database.</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(1, 'listSize', '50')">Under 100</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(1, 'listSize', '500')">100 – 1,000 (The "Sweet Spot")</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(1, 'listSize', '2500')">1,000 – 5,000</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(1, 'listSize', '5000')">5,000+ (Enterprise Level)</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="2">
+                    <h2 class="text-2xl font-bold mb-2">2. Engagement Decay</h2>
+                    <p class="text-slate-400 mb-6">When was the last time you sent a direct, personal offer to this entire list?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(2, 'lastEngagement', 'recent')">Within the last 30 days</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(2, 'lastEngagement', '3_months')">3 – 6 months ago</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(2, 'lastEngagement', 'over_year')">Over a year ago</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(2, 'lastEngagement', 'never')">We have never done this systematically</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="3">
+                    <h2 class="text-2xl font-bold mb-2">3. Current Process</h2>
+                    <p class="text-slate-400 mb-6">How is your team currently re-engaging old leads?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(3, 'method', 'manual')">We manually call/text when we have downtime</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(3, 'method', 'newsletter')">We send generic email newsletters</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(3, 'method', 'passive')">We rely on them to call us back</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(3, 'method', 'none')">We have no process for old leads</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="4">
+                    <h2 class="text-2xl font-bold mb-2">4. Acquisition Costs</h2>
+                    <p class="text-slate-400 mb-6">How would you describe your Cost Per Lead (CPL) for NEW traffic recently?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(4, 'cpl', 'steady')">It’s affordable and steady</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(4, 'cpl', 'rising')">It’s getting more expensive every month</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(4, 'cpl', 'fluctuating')">It fluctuates wildly</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(4, 'cpl', 'unknown')">I don’t track my CPL</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="5">
+                    <h2 class="text-2xl font-bold mb-2">5. Revenue Potential</h2>
+                    <p class="text-slate-400 mb-6">What is the average Lifetime Value (LTV) of a single client for you?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(5, 'ltv', '500')">Under $500</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(5, 'ltv', '1500')">$500 – $2,000</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(5, 'ltv', '5000')">$2,000 – $10,000</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(5, 'ltv', '10000')">$10,000+</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="6">
+                    <h2 class="text-2xl font-bold mb-2">6. The Bottleneck</h2>
+                    <p class="text-slate-400 mb-6">What has been the biggest barrier to reactivating these leads so far?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(6, 'barrier', 'time')">Lack of time/manpower to follow up</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(6, 'barrier', 'script')">Don't know what to say to them</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(6, 'barrier', 'fear')">Fear of being "annoying" or spammy</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(6, 'barrier', 'tech')">Technical issues (messy CRM/Data)</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="7">
+                    <h2 class="text-2xl font-bold mb-2">7. Data Health</h2>
+                    <p class="text-slate-400 mb-6">In what format is your customer data currently stored?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(7, 'format', 'crm')">A CRM (Salesforce, HubSpot, GoHighLevel, etc.)</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(7, 'format', 'excel')">Excel / Google Sheets</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(7, 'format', 'paper')">Physical paper files</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(7, 'format', 'scattered')">Scattered across multiple platforms</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="8">
+                    <h2 class="text-2xl font-bold mb-2">8. Operational Capacity</h2>
+                    <p class="text-slate-400 mb-6">If we instantly generated 10–15 booked appointments next week, could your team handle them?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(8, 'capacity', 'yes')">Yes, we have open calendar slots immediately</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(8, 'capacity', 'scramble')">Yes, but we’d need to scramble a bit</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(8, 'capacity', 'no')">No, we are booked solid for weeks</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(8, 'capacity', 'hiring')">We would need to hire more staff first</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="9">
+                    <h2 class="text-2xl font-bold mb-2">9. The Hook</h2>
+                    <p class="text-slate-400 mb-6">Do you currently have a compelling offer you could share to "wake up" these leads?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(9, 'offer', 'ready')">Yes, we have a strong offer ready</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(9, 'offer', 'create')">We could create one (discount/bundle)</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(9, 'offer', 'none')">No, we only sell at full price</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(9, 'offer', 'unsure')">I’m not sure what would work</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="10">
+                    <h2 class="text-2xl font-bold mb-2">10. Activation Method</h2>
+                    <p class="text-slate-400 mb-6">Are you willing to use compliant SMS (Texting) to communicate with these leads?</p>
+                    <div class="space-y-3">
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(10, 'sms', 'yes')">Yes, we already text customers</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(10, 'sms', 'willing')">Yes, but only if it’s professional/compliant</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(10, 'sms', 'no')">No, we prefer email or phone only</div>
+                        <div class="option-btn p-4 rounded-xl cursor-pointer font-medium" onclick="selectOption(10, 'sms', 'unsure')">I'm unsure about the regulations</div>
+                    </div>
+                </div>
+
+                <div class="step hidden-step fade-in" data-step="11">
+                    <h2 class="text-2xl font-bold mb-2">Audit Complete</h2>
+                    <p class="text-slate-400 mb-6">We've calculated your revenue leakage score. Where should we send your full report?</p>
+                    <div class="space-y-4">
+                        <div>
+                            <input type="text" id="companyName" required placeholder="Company Name" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:border-blue-500 outline-none transition-colors">
+                        </div>
+                        <div>
+                            <input type="text" id="userName" required placeholder="Your First Name" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:border-blue-500 outline-none transition-colors">
+                        </div>
+                        <div>
+                            <input type="email" id="userEmail" required placeholder="Email Address" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:border-blue-500 outline-none transition-colors">
+                        </div>
+                        <div>
+                            <input type="tel" id="userPhone" required placeholder="Phone Number (for SMS report)" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-4 text-white focus:border-blue-500 outline-none transition-colors">
+                        </div>
+                        
+                        <button type="button" id="submitBtn" onclick="submitQuiz()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold py-4 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)] transform hover:scale-[1.02]">
+                            GENERATE MY REVENUE BLUEPRINT →
+                        </button>
+                        <p class="text-xs text-center text-slate-500 mt-3"><i class="fas fa-lock"></i> Your data is secure and confidential.</p>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 1. Configuration
+        const answers = {};
+        let currentStep = 1;
+        const totalSteps = 11;
+        
+        // YOUR SPECIFIC GOOGLE APPS SCRIPT WEBHOOK URL
+        const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwHpsSCaH5IurgQlo7F6zE7zOOoawCBiRqnFEJGmplnaswoBxCzS-LdU4x6TjZ_y7pd/exec";
+
+        // 2. Navigation Logic
+        function selectOption(step, key, value) {
+            // Save answer
+            answers[key] = value;
+            
+            // Move to next step
+            if (step < totalSteps) {
+                // Add a small delay for better UX (so they see the click)
+                setTimeout(() => {
+                    nextStep(step);
+                }, 200);
+            }
+        }
+
+        function nextStep(current) {
+            // Hide current step
+            document.querySelector(`[data-step="${current}"]`).classList.add('hidden-step');
+            
+            // Show next step
+            const next = current + 1;
+            const nextEl = document.querySelector(`[data-step="${next}"]`);
+            if (nextEl) {
+                nextEl.classList.remove('hidden-step');
+                
+                // Update Progress Bar
+                currentStep = next;
+                document.getElementById('currentStepNum').innerText = currentStep;
+                const percent = (currentStep / totalSteps) * 100;
+                document.getElementById('progressBar').style.width = percent + "%";
+            }
+        }
+
+        // 3. Submission Logic
+        async function submitQuiz() {
+            const btn = document.getElementById('submitBtn');
+            const company = document.getElementById('companyName').value;
+            const name = document.getElementById('userName').value;
+            const email = document.getElementById('userEmail').value;
+            const phone = document.getElementById('userPhone').value;
+
+            // Simple Validation
+            if(!company || !name || !email || !phone) {
+                alert("Please fill in all fields to generate your report.");
+                return;
+            }
+
+            // Update UI to loading state
+            btn.innerText = "Analyzing Database...";
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            // Add final data to answers object
+            answers['company'] = company;
+            answers['name'] = name;
+            answers['email'] = email;
+            answers['phone'] = phone;
+
+            // Construct the Report URL (for redirect AND email)
+            // Ensure this matches your filename exactly: 'audit-report.html'
+            const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+            const queryParams = new URLSearchParams(answers).toString();
+            const finalRedirectUrl = `audit-report.html?${queryParams}`;
+            const fullReportLink = baseUrl + finalRedirectUrl;
+
+            // Add report URL to payload for the backend script
+            answers['report_url'] = fullReportLink;
+
+            // 4. Send Data to Google Script (Backend)
+            try {
+                // Using 'no-cors' mode is CRITICAL for Google Apps Script webhooks
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify(answers)
+                });
+                
+                console.log("Data sent to backend successfully");
+
+            } catch (e) {
+                console.error("Webhook submission error (non-fatal):", e);
+                // We proceed to redirect even if webhook fails so user sees the report
+            }
+
+            // 5. Redirect User (Delay slightly to ensure fetch fires)
+            setTimeout(() => {
+                window.location.href = finalRedirectUrl;
+            }, 1000); 
+        }
+    </script>
+</body>
+</html>
