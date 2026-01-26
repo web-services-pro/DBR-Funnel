@@ -3,202 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confidential Asset Audit Report - How Much Revenue Is Your Company Losing By Not Automating Intelligent Follow-Up?</title>
+    <title>Confidential Revenue Audit - How Much Revenue Is Your Company Losing By Not Automating Intelligent Follow-Up?</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Custom "Service Storm" Style Overrides */
-        body { background-color: #020617; font-family: 'Inter', sans-serif; color: white; }
-        .glass-panel { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.5); }
-        .gradient-text { background: linear-gradient(to right, #60a5fa, #a855f7); -webkit-background-clip: text; color: transparent; }
-        .revenue-box { background: rgba(69, 10, 10, 0.5); border: 1px solid rgba(220, 38, 38, 0.3); }
-        .breakdown-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(51, 65, 85, 0.5); }
+        body { background-color: #020617; font-family: 'Inter', sans-serif; color: #f8fafc; }
         
-        /* Loading Animation */
-        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #3498db; width: 24px; height: 24px; animation: spin 1s linear infinite; display: none; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Glass Panel */
+        .glass-panel { 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(51, 65, 85, 0.5); 
+        }
+
+        /* Status Colors */
+        .status-green { background: rgba(22, 163, 74, 0.1); border: 1px solid rgba(22, 163, 74, 0.3); color: #4ade80; }
+        .status-red { background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); color: #f87171; }
+        .status-orange { background: rgba(234, 88, 12, 0.1); border: 1px solid rgba(234, 88, 12, 0.3); color: #fb923c; }
+
+        /* Gauge Animation */
+        .gauge-circle {
+            transition: stroke-dashoffset 1s ease-in-out;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8">
 
     <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl"></div>
+        <div class="absolute top-0 left-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] -translate-x-1/2 -translate-y-1/2"></div>
     </div>
 
-    <div class="max-w-4xl mx-auto">
+    <div class="max-w-3xl mx-auto">
         
-        <div class="text-center mb-10">
-            <p class="text-slate-400 text-xs uppercase tracking-widest mb-2">Confidential Audit Report</p>
-            <h1 class="text-3xl md:text-5xl font-bold mb-4">
-                <span id="companyNameDisplay">Your Business</span> is Sitting on a <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Dormant Goldmine.</span>
+        <div class="text-center mb-10 fade-in">
+            <div class="inline-flex items-center justify-center w-32 h-32 relative mb-6">
+                <svg class="w-full h-full" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#1e293b" stroke-width="10" />
+                    <circle id="scoreGauge" cx="50" cy="50" r="45" fill="none" stroke="#f97316" stroke-width="10" 
+                            stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round" class="gauge-circle" />
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center flex-col">
+                    <span id="scoreDisplay" class="text-3xl font-bold text-white">0</span>
+                    <span class="text-xs text-slate-400">SCORE</span>
+                </div>
+            </div>
+
+            <h1 class="text-2xl md:text-4xl font-bold mb-3">
+                <span id="companyNameDisplay">Your Business</span> is Leaking Revenue!
             </h1>
+            <p class="text-slate-400">You're losing significant revenue from preventable gaps in your database.</p>
         </div>
 
-        <div class="glass-panel rounded-3xl p-8 mb-8 shadow-2xl relative overflow-hidden">
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                
-                <div class="text-center md:text-left">
-                    <p class="text-slate-400 mb-2">Asset Utilization Score</p>
-                    <div class="inline-flex items-center justify-center w-32 h-32 rounded-full border-4 border-orange-500 bg-orange-500/10 mb-4 shadow-[0_0_20px_rgba(249,115,22,0.3)]">
-                        <div class="text-center">
-                            <span id="scoreDisplay" class="text-4xl font-bold text-white">0</span>
-                            <span class="text-sm text-orange-300 block">/ 100</span>
-                        </div>
-                    </div>
-                    <p class="text-sm text-slate-300">
-                        <span class="text-orange-400 font-bold">CRITICAL ACTION NEEDED:</span> Your lead database is decaying faster than you are monetizing it.
-                    </p>
-                </div>
-
-                <div class="revenue-box rounded-2xl p-6 text-center">
-                    <p class="text-red-200 text-xs font-bold uppercase tracking-wide mb-2">Revenue Stuck in Your CRM</p>
-                    <div class="text-4xl md:text-5xl font-extrabold text-white mb-2" id="revenueGapDisplay">$0</div>
-                    <p class="text-red-300 text-sm mb-4">in immediate potential revenue</p>
-                    
-                    <div class="border-t border-red-500/30 pt-4 mt-4 grid grid-cols-2 gap-4 text-left">
-                        <div>
-                            <p class="text-slate-400 text-xs">Ad Spend Req:</p>
-                            <p class="text-emerald-400 font-bold">$0.00</p>
-                        </div>
-                        <div>
-                            <p class="text-slate-400 text-xs">Launch Time:</p>
-                            <p class="text-white font-bold">&lt; 48 Hours</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="glass-panel rounded-3xl p-8 mb-8">
-            <h2 class="text-2xl font-bold mb-6">Why This Revenue is Stuck</h2>
-            <div class="space-y-4" id="breakdownContainer">
-                <div class="text-center text-slate-500 italic">Loading analysis...</div>
-            </div>
-        </div>
-
-        <div class="glass-panel rounded-3xl p-10 text-center border-blue-500/30 shadow-[0_0_40px_rgba(59,130,246,0.1)]">
-            <h2 class="text-2xl font-bold text-white mb-4">Your Custom Activation Blueprint is Ready</h2>
-            <p class="text-slate-400 max-w-xl mx-auto mb-8">
-                Based on your score of <span id="scoreText"></span>, we have generated a specific "Spear" campaign to unlock this revenue. This is not a sales call—it is a 15-minute review to verify your data format.
-            </p>
+        <div class="bg-red-950/30 border border-red-500/30 rounded-2xl p-8 mb-10 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50"></div>
             
-            <a href="https://calendly.com/ai-automation-chatbot/intro" class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-200 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl hover:from-blue-500 hover:to-indigo-500 shadow-lg shadow-blue-500/25 transform hover:scale-105">
-                UNLOCK MY REVENUE BLUEPRINT →
+            <p class="text-red-300 text-xs font-bold uppercase tracking-wider mb-2">Estimated Revenue Stuck in Your CRM</p>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8 mb-6">
+                <div>
+                    <span id="revenueGapDisplay" class="text-4xl md:text-5xl font-extrabold text-white block">$0</span>
+                    <span class="text-xs text-red-200/60">Potential Immediate Revenue</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 border-t border-red-500/20 pt-6">
+                <div>
+                    <p class="text-slate-400 text-xs">Ad Spend Required</p>
+                    <p class="text-emerald-400 font-bold text-lg">$0.00</p>
+                </div>
+                <div>
+                    <p class="text-slate-400 text-xs">Launch Time</p>
+                    <p class="text-white font-bold text-lg">&lt; 48 Hours</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-xl font-bold text-white mb-6 pl-2 border-l-4 border-blue-500">Your Detailed Breakdown</h2>
+        
+        <div id="breakdownContainer" class="space-y-6">
+            <div class="text-center p-10"><i class="fas fa-circle-notch fa-spin text-blue-500"></i> Analyzing Data...</div>
+        </div>
+
+        <div class="mt-16 bg-slate-900/80 border border-slate-800 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none"></div>
+            
+            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4 relative z-10">Here's How We Can Help</h2>
+            <p class="text-slate-400 mb-8 max-w-lg mx-auto relative z-10">
+                We help businesses like yours plug these exact leaks. We can reactivate your old leads and fill your calendar in less than 7 days, often with zero ad spend.
+            </p>
+
+            <a href="https://bit.ly/AI-Business-Automation" target="_blank" class="relative z-10 inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-200 bg-blue-600 rounded-xl hover:bg-blue-500 shadow-lg shadow-blue-500/25 transform hover:scale-[1.02]">
+                Book Your Free Strategy Call
             </a>
-            <p class="text-xs text-slate-600 mt-4">Only 3 Audit Slots Available for this week.</p>
+            
+            <p class="text-xs text-slate-600 mt-4 relative z-10">30 minutes • No pressure • Get a custom game plan</p>
+
+            <div class="mt-10 pt-10 border-t border-slate-800 relative z-10">
+                <p class="text-slate-300 italic mb-3">"We booked 40% more jobs from the same list we thought was dead. We were losing leads we didn't even know about."</p>
+                <p class="text-slate-500 text-sm font-bold">— Mike R., Home Service Pro</p>
+            </div>
+        </div>
+
+        <div class="text-center mt-8 pb-8">
+            <p class="text-slate-600 text-sm">
+                Powered by 
+                <a href="https://www.webservicespro.co/" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 hover:text-blue-500 transition-colors">
+                    Web Services Pro
+                </a>
+            </p>
         </div>
 
     </div>
 
     <script>
-        // 1. Get URL Parameters (Simulating the Quiz Data)
+        // 1. Get URL Parameters
         const urlParams = new URLSearchParams(window.location.search);
+        function getParam(key, backup) { return urlParams.get(key) || backup; }
 
-        // Helper function to get param with default backup
-        function getParam(key, backup) {
-            return urlParams.get(key) || backup;
-        }
+        // 2. Capture Inputs & Clean Data
+        const rawListSize = getParam('listSize', '1000');
+        const rawLtv = getParam('ltv', '1500');
+        
+        // Clean numbers (remove non-digits)
+        const listSize = parseInt(String(rawListSize).replace(/[^0-9]/g, '')) || 1000;
+        const ltv = parseInt(String(rawLtv).replace(/[^0-9]/g, '')) || 1500;
 
-        // 2. Capture the Quiz Inputs (Default values used if URL is empty for testing)
         const inputs = {
             company: getParam('company', 'Your Business'),
-            listSize: parseInt(getParam('leads', '1500')), // Q1: Number of leads
-            lastEngagement: getParam('time', '6_months'),   // Q2: Time since last contact
-            method: getParam('method', 'manual'),           // Q3: How they follow up (manual/none)
-            cpl: getParam('cpl', 'rising'),                 // Q4: Cost per lead trend
-            ltv: parseInt(getParam('ltv', '2000')),         // Q5: Lifetime Value
-            sms: getParam('sms', 'no')                      // Q10: Do they use SMS?
+            listSize: listSize,
+            ltv: ltv,
+            lastEngagement: getParam('lastEngagement', 'over_year'),
+            method: getParam('method', 'manual'),
+            cpl: getParam('cpl', 'rising'),
+            sms: getParam('sms', 'no'),
+            offer: getParam('offer', 'none'),
+            barrier: getParam('barrier', 'time'),
+            capacity: getParam('capacity', 'yes')
         };
 
-        // 3. The Calculation Engine
-        const conversionRate = 0.05; // Conservative 5% reactivation rate
+        // 3. Calculate Revenue Gap (Using strict 5% formula to match backend)
+        const conversionRate = 0.05; 
         const revenueGap = inputs.listSize * inputs.ltv * conversionRate;
-        
-        // Calculate Score (Simple Algorithm)
-        let score = 100;
-        if(inputs.method === 'manual') score -= 30;
-        if(inputs.method === 'none') score -= 50;
-        if(inputs.sms === 'no') score -= 20;
-        if(inputs.lastEngagement === 'over_year') score -= 15;
-        if (score < 0) score = 0;
 
-        // 4. Update the DOM (The Visuals)
+        // Calculate Score
+        let score = 85; // Start high
+        if(inputs.method === 'manual') score -= 20;
+        if(inputs.method === 'none') score -= 30;
+        if(inputs.sms === 'no') score -= 15;
+        if(inputs.lastEngagement === 'over_year') score -= 10;
+        if(inputs.offer === 'none') score -= 10;
+        if(score < 15) score = 15; // Min score
+
+        // 4. Update Header DOM
         document.getElementById('companyNameDisplay').innerText = inputs.company;
         document.getElementById('scoreDisplay').innerText = score;
-        document.getElementById('scoreText').innerText = score + "/100";
         
+        // Animate Gauge
+        const circle = document.getElementById('scoreGauge');
+        const radius = circle.r.baseVal.value;
+        const circumference = radius * 2 * Math.PI;
+        const offset = circumference - ((score / 100) * circumference);
+        
+        // Color logic for gauge
+        if(score > 70) circle.style.stroke = "#4ade80"; // Green
+        else if(score > 40) circle.style.stroke = "#fb923c"; // Orange
+        else circle.style.stroke = "#ef4444"; // Red
+
+        setTimeout(() => { circle.style.strokeDashoffset = offset; }, 500);
+
         // Format Currency
-        const formatter = new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            maximumFractionDigits: 0
-        });
+        const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
         document.getElementById('revenueGapDisplay').innerText = formatter.format(revenueGap);
 
-        // 5. Dynamic Content Generator (The "Why It Matters" Logic)
-        const breakdownContainer = document.getElementById('breakdownContainer');
-        let htmlContent = '';
+        // 5. Dynamic Breakdown Logic (The "Service Storm" Style Cards)
+        const container = document.getElementById('breakdownContainer');
+        let html = '';
 
-        // -- Logic Block A: The Manual Labor Trap --
+        // Helper to generate a card
+        function createCard(title, answer, insight, isGood) {
+            const statusClass = isGood ? 'status-green' : 'status-red';
+            const statusText = isGood ? "You're doing great here!" : "Critical Revenue Leak Detected";
+            const icon = isGood ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-triangle"></i>';
+            
+            return `
+            <div class="glass-panel rounded-xl p-6 border-l-4 ${isGood ? 'border-green-500' : 'border-red-500'}">
+                <div class="flex justify-between items-start mb-3">
+                    <h3 class="font-bold text-white text-lg">${title}</h3>
+                    <div class="text-xs px-2 py-1 rounded font-bold uppercase tracking-wide ${statusClass}">
+                        ${icon} ${isGood ? 'Optimized' : 'Gap Found'}
+                    </div>
+                </div>
+                <p class="text-sm text-slate-400 mb-3">
+                    <span class="text-slate-500">Your Answer:</span> "${answer}"
+                </p>
+                <p class="text-sm text-slate-300 mb-4 border-l-2 border-slate-700 pl-3">
+                    <strong class="${isGood ? 'text-green-400' : 'text-blue-400'}">Why it matters:</strong> ${insight}
+                </p>
+                <div class="${statusClass} rounded-lg p-3 text-sm font-medium">
+                    ${statusText}
+                </div>
+            </div>`;
+        }
+
+        // --- GENERATE CARDS BASED ON LOGIC ---
+
+        // 1. List Size Logic
+        html += createCard(
+            "Database Potential",
+            inputs.listSize + " Leads",
+            `A list of ${inputs.listSize} leads is a significant asset. In your industry, standard reactivation rates are 3-5%. That means there are likely ${(inputs.listSize * 0.05).toFixed(0)} buyers waiting in this list right now.`,
+            inputs.listSize > 500 // Good if list is big
+        );
+
+        // 2. Engagement Logic
+        if (inputs.lastEngagement === 'recent') {
+            html += createCard("Engagement Frequency", "Within last 30 days", "Regular contact keeps you top-of-mind. Great job maintaining relationship equity.", true);
+        } else {
+            html += createCard(
+                "Engagement Decay", 
+                "Over a year ago / Never", 
+                "Leads decay by ~10% every month they are ignored. Your database is depreciating. We need to re-engage them immediately before they buy from a competitor.", 
+                false
+            );
+        }
+
+        // 3. Method Logic (Manual vs Auto)
         if (inputs.method === 'manual' || inputs.method === 'none') {
-            htmlContent += `
-            <div class="breakdown-card rounded-xl p-5 border-l-4 border-l-orange-500">
-                <div class="flex justify-between mb-2">
-                    <h3 class="font-bold text-white">⚠ The Manual Labor Trap</h3>
-                    <span class="text-xs bg-orange-500/20 text-orange-400 px-2 py-1 rounded">Critical Gap</span>
-                </div>
-                <p class="text-sm text-slate-400 mb-3">
-                    <span class="text-slate-500">Your Answer:</span> "We follow up manually."
-                </p>
-                <p class="text-sm text-slate-300 mb-2">
-                    <strong class="text-orange-400">Why it matters:</strong> Manual follow-up is inefficient and hard to scale. It takes ~8 calls to reach a lead. 
-                    To reactivate your ${inputs.listSize} leads, your team would need to make ${inputs.listSize * 8} dials. This leads to burnout.
-                </p>
-                <div class="bg-black/20 p-3 rounded mt-3">
-                    <p class="text-xs text-green-400"><strong>✅ The Fix:</strong> Automate the first 3 touches. Your team should only speak to "ready-to-hire" sales appointments.</p>
-                </div>
-            </div>`;
+            html += createCard(
+                "Follow-up Method",
+                "Manual / No Process",
+                "Manual follow-up is mathematically capped. To hit your leads effectively, your team would need to make thousands of calls. Automation solves this by filtering leads so you only talk to hand-raisers.",
+                false
+            );
+        } else {
+            html += createCard("Follow-up Method", "Automated / Newsletter", "Using automation is key. However, ensure it's 2-way conversational automation, not just blast newsletters.", true);
         }
 
-        // -- Logic Block B: The Channel Mismatch (SMS) --
+        // 4. SMS Logic
         if (inputs.sms === 'no' || inputs.sms === 'unsure') {
-            htmlContent += `
-            <div class="breakdown-card rounded-xl p-5 border-l-4 border-l-red-500">
-                <div class="flex justify-between mb-2">
-                    <h3 class="font-bold text-white">⛔ The Channel Mismatch</h3>
-                    <span class="text-xs bg-red-500/20 text-red-400 px-2 py-1 rounded">Revenue Leak</span>
-                </div>
-                <p class="text-sm text-slate-400 mb-3">
-                    <span class="text-slate-500">Your Answer:</span> "We don't use SMS automation."
-                </p>
-                <p class="text-sm text-slate-300 mb-2">
-                    <strong class="text-red-400">Why it matters:</strong> Email open rates are < 20%. SMS open rates are 98%. 
-                    By relying on email/phone, 80% of your ${inputs.listSize} leads effectively never hear you.
-                </p>
-                <div class="bg-black/20 p-3 rounded mt-3">
-                    <p class="text-xs text-green-400"><strong>✅ The Fix:</strong> A compliant "9-word" text campaign usually triples response rates immediately.</p>
-                </div>
-            </div>`;
+            html += createCard(
+                "Communication Channel",
+                "No SMS / Unsure",
+                "Email open rates are < 20%. SMS open rates are 98%. By relying on email, 80% of your list never hears your offer. Adding SMS is the single fastest way to spike revenue.",
+                false
+            );
+        } else {
+            html += createCard("Communication Channel", "Yes, we use SMS", "Excellent. SMS is the highest converting channel for reactivation.", true);
         }
 
-        // -- Logic Block C: Asset Decay --
-        htmlContent += `
-        <div class="breakdown-card rounded-xl p-5 border-l-4 border-l-blue-500">
-            <div class="flex justify-between mb-2">
-                <h3 class="font-bold text-white">📉 Inventory Decay Analysis</h3>
-                <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">Asset Health</span>
-            </div>
-            <p class="text-sm text-slate-300 mb-2">
-                You identified <strong>${inputs.listSize} leads</strong> sitting idle. In your industry, lead lists "decay" by about 10% per month (people move, change numbers, or buy elsewhere).
-            </p>
-            <p class="text-sm text-slate-300">
-                This database is a depreciating asset. Reactivating them now is the only way to capture the <strong>${formatter.format(revenueGap)}</strong> identified above before it vanishes.
-            </p>
-        </div>`;
+        // 5. Offer Logic
+        if (inputs.offer === 'none' || inputs.offer === 'unsure') {
+            html += createCard(
+                "Reactivation Offer",
+                "No strong offer / Unsure",
+                "Old leads need a 'catalyst' to act. 'Just checking in' messages don't work. We need to create a 'Spear' offer (like a specific discount or audit) to get them to reply.",
+                false
+            );
+        }
 
-        // Inject the HTML
-        breakdownContainer.innerHTML = htmlContent;
+        container.innerHTML = html;
 
     </script>
 </body>
