@@ -9,17 +9,17 @@
     <style>
         body { background-color: #020617; font-family: 'Inter', sans-serif; color: #f8fafc; }
         
-        /* Glass Panel */
+        /* Glass Panel - Increased Brightness/Contrast */
         .glass-panel { 
-            background: rgba(15, 23, 42, 0.6); 
+            background: rgba(15, 23, 42, 0.8); 
             backdrop-filter: blur(12px); 
-            border: 1px solid rgba(51, 65, 85, 0.5); 
+            border: 1px solid rgba(71, 85, 105, 0.6); 
         }
 
-        /* Status Colors */
-        .status-green { background: rgba(22, 163, 74, 0.1); border: 1px solid rgba(22, 163, 74, 0.3); color: #4ade80; }
-        .status-red { background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.3); color: #f87171; }
-        .status-orange { background: rgba(234, 88, 12, 0.1); border: 1px solid rgba(234, 88, 12, 0.3); color: #fb923c; }
+        /* Status Colors - Brighter for Dark Mode */
+        .status-green { background: rgba(22, 163, 74, 0.15); border: 1px solid rgba(22, 163, 74, 0.5); color: #4ade80; }
+        .status-red { background: rgba(220, 38, 38, 0.15); border: 1px solid rgba(220, 38, 38, 0.5); color: #fca5a5; }
+        .status-orange { background: rgba(234, 88, 12, 0.15); border: 1px solid rgba(234, 88, 12, 0.5); color: #fdba74; }
 
         /* Gauge Animation */
         .gauge-circle {
@@ -37,60 +37,60 @@
 
     <div class="max-w-3xl mx-auto">
         
-        <div class="text-center mb-10 fade-in">
-            <div class="inline-flex items-center justify-center w-32 h-32 relative mb-6">
+        <div class="text-center mb-12 fade-in">
+            <div class="inline-flex items-center justify-center w-36 h-36 relative mb-6">
                 <svg class="w-full h-full" viewBox="0 0 100 100">
                     <circle cx="50" cy="50" r="45" fill="none" stroke="#1e293b" stroke-width="10" />
                     <circle id="scoreGauge" cx="50" cy="50" r="45" fill="none" stroke="#f97316" stroke-width="10" 
                             stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round" class="gauge-circle" />
                 </svg>
                 <div class="absolute inset-0 flex items-center justify-center flex-col">
-                    <span id="scoreDisplay" class="text-3xl font-bold text-white">0</span>
-                    <span class="text-xs text-slate-400">SCORE</span>
+                    <span id="scoreDisplay" class="text-4xl font-extrabold text-white">0</span>
+                    <span class="text-sm text-slate-300 font-bold tracking-wide">SCORE</span>
                 </div>
             </div>
 
-            <h1 class="text-2xl md:text-4xl font-bold mb-3">
+            <h1 class="text-3xl md:text-5xl font-bold mb-4 text-white">
                 <span id="companyNameDisplay">Your Business</span> is Leaking Revenue!
             </h1>
-            <p class="text-slate-400">You're losing significant revenue from preventable gaps in your database.</p>
+            <p class="text-slate-300 text-lg">You're losing significant revenue from preventable gaps in your database and inefficient processes.</p>
         </div>
 
-        <div class="bg-red-950/30 border border-red-500/30 rounded-2xl p-8 mb-10 text-center relative overflow-hidden">
+        <div class="bg-red-950/40 border border-red-500/40 rounded-2xl p-8 mb-12 text-center relative overflow-hidden shadow-2xl">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent opacity-50"></div>
             
-            <p class="text-red-300 text-xs font-bold uppercase tracking-wider mb-2">Estimated Revenue Stuck in Your CRM</p>
+            <p class="text-red-200 text-sm font-bold uppercase tracking-widest mb-3">Estimated Revenue Stuck in Your CRM</p>
             
-            <div class="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8 mb-6">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8 mb-8">
                 <div>
-                    <span id="revenueGapDisplay" class="text-4xl md:text-5xl font-extrabold text-white block">$0</span>
-                    <span class="text-xs text-red-200/60">Potential Immediate Revenue</span>
+                    <span id="revenueGapDisplay" class="text-5xl md:text-6xl font-black text-white block tracking-tight mb-1">$0</span>
+                    <span class="text-sm text-red-200 opacity-80 font-medium">Potential Immediate Revenue</span>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 border-t border-red-500/20 pt-6">
                 <div>
-                    <p class="text-slate-400 text-xs">Ad Spend Required</p>
-                    <p class="text-emerald-400 font-bold text-lg">$0.00</p>
+                    <p class="text-slate-300 text-sm mb-1">Ad Spend Required</p>
+                    <p class="text-emerald-400 font-bold text-2xl">$0.00</p>
                 </div>
                 <div>
-                    <p class="text-slate-400 text-xs">Launch Time</p>
-                    <p class="text-white font-bold text-lg">&lt; 48 Hours</p>
+                    <p class="text-slate-300 text-sm mb-1">Launch Time</p>
+                    <p class="text-white font-bold text-2xl">&lt; 48 Hours</p>
                 </div>
             </div>
         </div>
 
-        <h2 class="text-xl font-bold text-white mb-6 pl-2 border-l-4 border-blue-500">Your Detailed Breakdown</h2>
+        <h2 class="text-2xl font-bold text-white mb-6 pl-3 border-l-4 border-blue-500">Your Detailed Breakdown</h2>
         
         <div id="breakdownContainer" class="space-y-6">
-            <div class="text-center p-10"><i class="fas fa-circle-notch fa-spin text-blue-500"></i> Analyzing Data...</div>
+            <div class="text-center p-10"><i class="fas fa-circle-notch fa-spin text-blue-500 text-2xl"></i> <span class="ml-3 text-slate-300">Analyzing Data...</span></div>
         </div>
 
-        <div class="mt-16 bg-slate-900/80 border border-slate-800 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+        <div class="mt-16 bg-slate-900/90 border border-slate-700 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden shadow-2xl">
             <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-transparent pointer-events-none"></div>
             
-            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4 relative z-10">Here's How We Can Help</h2>
-            <p class="text-slate-400 mb-8 max-w-lg mx-auto relative z-10">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4 relative z-10">Here's How We Can Help</h2>
+            <p class="text-slate-300 text-lg mb-8 max-w-lg mx-auto relative z-10 leading-relaxed">
                 We help businesses like yours plug these exact leaks. We can reactivate your old leads and fill your calendar in less than 7 days, often with zero ad spend.
             </p>
 
@@ -98,18 +98,18 @@
                 Full Solution Details Revealed
             </a>
             
-            <p class="text-xs text-slate-600 mt-4 relative z-10">We Recover Lost Revenue For You BEFORE You Pay Us A Dime</p>
+            <p class="text-sm text-slate-400 mt-5 relative z-10 font-medium">We Recover Lost Revenue For You BEFORE You Pay Us A Dime</p>
 
             <div class="mt-10 pt-10 border-t border-slate-800 relative z-10">
-                <p class="text-slate-300 italic mb-3">"We booked 40% more jobs from the same list we thought was dead. We were losing leads we didn't even know about."</p>
-                <p class="text-slate-500 text-sm font-bold">— Victoria R., SAMS Construction Group</p>
+                <p class="text-slate-200 text-lg italic mb-3">"We booked 40% more jobs from the same list we thought was dead. We were losing leads we didn't even know about."</p>
+                <p class="text-slate-400 text-sm font-bold uppercase tracking-wide">— Victoria R., SAMS Construction Group</p>
             </div>
         </div>
 
-        <div class="text-center mt-8 pb-8">
-            <p class="text-slate-600 text-sm">
+        <div class="text-center mt-12 pb-12">
+            <p class="text-slate-500 text-sm">
                 Powered by 
-                <a href="https://www.webservicespro.co/" target="_blank" rel="noopener noreferrer" class="font-semibold text-slate-500 hover:text-blue-500 transition-colors">
+                <a href="https://www.webservicespro.co/" target="_blank" rel="noopener noreferrer" class="font-bold text-slate-400 hover:text-blue-400 transition-colors">
                     Web Services Pro
                 </a>
             </p>
@@ -118,15 +118,11 @@
     </div>
 
     <script>
-        // 1. Get URL Parameters
         const urlParams = new URLSearchParams(window.location.search);
         function getParam(key, backup) { return urlParams.get(key) || backup; }
 
-        // 2. Capture Inputs & Clean Data
         const rawListSize = getParam('listSize', '1000');
         const rawLtv = getParam('ltv', '1500');
-        
-        // Clean numbers (remove non-digits)
         const listSize = parseInt(String(rawListSize).replace(/[^0-9]/g, '')) || 1000;
         const ltv = parseInt(String(rawLtv).replace(/[^0-9]/g, '')) || 1500;
 
@@ -143,45 +139,37 @@
             capacity: getParam('capacity', 'yes')
         };
 
-        // 3. Calculate Revenue Gap (Using strict 5% formula to match backend)
         const conversionRate = 0.05; 
         const revenueGap = inputs.listSize * inputs.ltv * conversionRate;
 
-        // Calculate Score
-        let score = 85; // Start high
+        let score = 85; 
         if(inputs.method === 'manual') score -= 20;
         if(inputs.method === 'none') score -= 30;
         if(inputs.sms === 'no') score -= 15;
         if(inputs.lastEngagement === 'over_year') score -= 10;
         if(inputs.offer === 'none') score -= 10;
-        if(score < 15) score = 15; // Min score
+        if(score < 15) score = 15; 
 
-        // 4. Update Header DOM
         document.getElementById('companyNameDisplay').innerText = inputs.company;
         document.getElementById('scoreDisplay').innerText = score;
         
-        // Animate Gauge
         const circle = document.getElementById('scoreGauge');
         const radius = circle.r.baseVal.value;
         const circumference = radius * 2 * Math.PI;
         const offset = circumference - ((score / 100) * circumference);
         
-        // Color logic for gauge
-        if(score > 70) circle.style.stroke = "#4ade80"; // Green
-        else if(score > 40) circle.style.stroke = "#fb923c"; // Orange
-        else circle.style.stroke = "#ef4444"; // Red
+        if(score > 70) circle.style.stroke = "#4ade80"; 
+        else if(score > 40) circle.style.stroke = "#fb923c"; 
+        else circle.style.stroke = "#ef4444"; 
 
         setTimeout(() => { circle.style.strokeDashoffset = offset; }, 500);
 
-        // Format Currency
         const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
         document.getElementById('revenueGapDisplay').innerText = formatter.format(revenueGap);
 
-        // 5. Dynamic Breakdown Logic (The "Service Storm" Style Cards)
         const container = document.getElementById('breakdownContainer');
         let html = '';
 
-        // Helper to generate a card
         function createCard(title, answer, insight, isGood) {
             const statusClass = isGood ? 'status-green' : 'status-red';
             const statusText = isGood ? "You're doing great here!" : "Critical Revenue Leak Detected";
@@ -190,31 +178,30 @@
             return `
             <div class="glass-panel rounded-xl p-6 border-l-4 ${isGood ? 'border-green-500' : 'border-red-500'}">
                 <div class="flex justify-between items-start mb-3">
-                    <h3 class="font-bold text-white text-lg">${title}</h3>
-                    <div class="text-xs px-2 py-1 rounded font-bold uppercase tracking-wide ${statusClass}">
+                    <h3 class="font-bold text-white text-xl">${title}</h3>
+                    <div class="text-xs px-3 py-1 rounded font-bold uppercase tracking-wide ${statusClass}">
                         ${icon} ${isGood ? 'Optimized' : 'Gap Found'}
                     </div>
                 </div>
-                <p class="text-sm text-slate-400 mb-3">
-                    <span class="text-slate-500">Your Answer:</span> "${answer}"
+                <p class="text-base text-slate-300 mb-3">
+                    <span class="text-slate-400 text-sm uppercase font-bold tracking-wider">Your Answer:</span> <br/>
+                    <span class="text-white font-medium text-lg">"${answer}"</span>
                 </p>
-                <p class="text-sm text-slate-300 mb-4 border-l-2 border-slate-700 pl-3">
-                    <strong class="${isGood ? 'text-green-400' : 'text-blue-400'}">Why it matters:</strong> ${insight}
-                </p>
-                <div class="${statusClass} rounded-lg p-3 text-sm font-medium">
-                    ${statusText}
+                <div class="text-base text-slate-200 mb-4 border-l-2 border-slate-600 pl-4 py-1 leading-relaxed">
+                    <strong class="${isGood ? 'text-green-400' : 'text-blue-400'} block mb-1">Why it matters:</strong> ${insight}
+                </div>
+                <div class="${statusClass} rounded-lg p-3 text-sm font-bold flex items-center gap-2">
+                    ${icon} ${statusText}
                 </div>
             </div>`;
         }
-
-        // --- GENERATE CARDS BASED ON LOGIC ---
 
         // 1. List Size Logic
         html += createCard(
             "Database Potential",
             inputs.listSize + " Leads",
             `A list of ${inputs.listSize} leads is a significant asset. In your industry, standard reactivation rates are 3-5%. That means there are likely ${(inputs.listSize * 0.05).toFixed(0)} buyers waiting in this list right now.`,
-            inputs.listSize > 500 // Good if list is big
+            inputs.listSize > 500 
         );
 
         // 2. Engagement Logic
@@ -229,12 +216,12 @@
             );
         }
 
-        // 3. Method Logic (Manual vs Auto)
+        // 3. Method Logic 
         if (inputs.method === 'manual' || inputs.method === 'none') {
             html += createCard(
                 "Follow-up Method",
                 "Manual / No Process",
-                "Manual follow-up is mathematically capped. To hit your leads effectively, your team would need to make thousands of calls. Automation solves this by filtering leads so you only talk to hand-raisers.",
+                "Manual follow-up is mathematically capped. Automation solves this by filtering leads so you only talk to hand-raisers.",
                 false
             );
         } else {
@@ -268,4 +255,3 @@
     </script>
 </body>
 </html>
-
