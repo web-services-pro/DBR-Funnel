@@ -221,7 +221,7 @@
             html += createCard(
                 "Follow-up Method",
                 "Manual / No Process",
-                "Manual follow-up is mathematically capped. Automation solves this by filtering leads so you only talk to hand-raisers.",
+                "Manual follow-up is mathematically capped. Automation solves this by filtering leads so you only talk to 'ready-to-hire' sales appointments.",
                 false
             );
         } else {
@@ -250,8 +250,77 @@
             );
         }
 
+        // 6. CPL Trend Logic (Acquisition Cost)
+        if (inputs.cpl === 'rising' || inputs.cpl === 'fluctuating' || inputs.cpl === 'unknown') {
+            html += createCard(
+                "Acquisition Efficiency",
+                "Rising / Unstable / Unknown",
+                "Reliance on paid ads is becoming riskier as costs rise. Reactivating old leads lowers your 'Blended CAC' (Customer Acquisition Cost), giving you a competitive advantage against businesses that only buy new traffic.",
+                false
+            );
+        } else {
+            html += createCard("Acquisition Efficiency", "Steady & Affordable", "Your front-end acquisition is healthy. Adding backend reactivation will purely increase your profit margins.", true);
+        }
+
+        // 7. LTV Logic (Customer Value)
+        // We use the raw number to determine the insight
+        if (inputs.ltv >= 2000) {
+            html += createCard(
+                "Customer Lifetime Value",
+                "High Value ($" + inputs.ltv.toLocaleString() + "+)",
+                "With a high LTV, every single lost lead is expensive. You don't need high volume to make reactivation work; retrieving just 3-5 clients covers the cost of an entire year of automation.",
+                true
+            );
+        } else {
+            html += createCard(
+                "Customer Lifetime Value",
+                "Standard Value (< $2,000)",
+                "At this price point, volume is key. Manual follow-up eats into your margins. Automation is the only way to profitably engage these leads at scale.",
+                false
+            );
+        }
+
+        // 8. Barrier Logic (The Bottleneck)
+        let barrierInsight = "";
+        if (inputs.barrier === 'time') barrierInsight = "Lack of time is the #1 killer of sales. An AI receptionist creates 'infinite time' by working 24/7.";
+        if (inputs.barrier === 'script') barrierInsight = "Not knowing what to say leads to paralysis. We use proven 'Spear' scripts that are designed to start conversations, not pitch immediately.";
+        if (inputs.barrier === 'fear') barrierInsight = "Fear of being 'spammy' is valid. That's why we use value-based reactivation (offering help) rather than aggressive sales blasts.";
+        if (inputs.barrier === 'tech') barrierInsight = "Messy data prevents revenue. Part of our process involves cleaning and segmenting your list so you can monetize it efficiently.";
+        
+        html += createCard(
+            "Primary Growth Barrier",
+            inputs.barrier.charAt(0).toUpperCase() + inputs.barrier.slice(1), // Capitalize first letter
+            barrierInsight,
+            false // A barrier is always a gap to fix
+        );
+
+        // 9. Data Health Logic
+        if (inputs.format === 'paper' || inputs.format === 'scattered') {
+            html += createCard(
+                "Data Hygiene",
+                "Paper / Scattered",
+                "Digital assets cannot be leveraged if they are trapped in paper or scattered files. Digitizing this list is the first step to unlocking the revenue identified above.",
+                false
+            );
+        } else {
+            html += createCard("Data Hygiene", "Centralized CRM / Excel", "Your data is in a usable format. We can likely plug directly into your system or upload your list to launch a campaign within 24 hours.", true);
+        }
+
+        // 10. Capacity Logic
+        if (inputs.capacity === 'no' || inputs.capacity === 'hiring' || inputs.capacity === 'scramble') {
+            html += createCard(
+                "Operational Capacity",
+                "Limited / Need to Hire",
+                "Reactivation campaigns work fast. To prevent breaking your fulfillment, we will 'throttle' the outreach (e.g., only messaging 50 leads/day) so you receive a steady stream of appointments rather than a flood.",
+                false
+            );
+        } else {
+            html += createCard("Operational Capacity", "Ready for volume", "Since you have immediate capacity, we can ungate the campaign to fill your calendar as quickly as possible.", true);
+        }
+
         container.innerHTML = html;
 
     </script>
 </body>
 </html>
+
