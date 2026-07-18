@@ -32,7 +32,7 @@
 <body class="min-h-screen p-4 md:p-8">
 
     <!-- Company Branding Header -->
-    <div class="fixed top-0 left-0 z-50 p-4 md:p-6">
+    <div class="absolute top-0 left-0 z-50 p-4 md:p-6">
         <a href="https://www.webservicespro.co/" target="_blank" rel="noopener noreferrer" class="inline-block">
             <img src="Web_Services_Pro_Logo_Black.png" alt="Web Services Pro" class="h-12 md:h-16 w-auto opacity-90 hover:opacity-100 transition-opacity duration-200">
         </a>
@@ -192,11 +192,12 @@
         	    }
 
 	            #database-reactivation-faq {
-            	  background: var(--dbrfaq-bg);
-	              font-family: var(--dbrfaq-font);
-            	  padding: 88px 24px;
-              	  width: 100%;
-            	}
+        	      background: transparent;
+            	  font-family: var(--dbrfaq-font);
+       		      padding: 8px 0 0;
+       		      margin-bottom: 2rem;
+       		      width: 100%;
+       		    }
 
 	            .dbrfaq-container {
             	  max-width: 840px;
@@ -415,7 +416,7 @@
 
         	    @media (max-width: 640px) {
             	  #database-reactivation-faq {
-                	padding: 56px 16px;
+                	padding: 8px 0 0;
               	  }
 
 	              .dbrfaq-title {
