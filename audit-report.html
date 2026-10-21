@@ -40,6 +40,14 @@
 	'https://connect.facebook.net/en_US/fbevents.js');
 	fbq('init', '764970315154958');
 	fbq('track', 'PageView');
+	try {
+	  if (!sessionStorage.getItem('dbr_lead_fired')) {
+	    fbq('track', 'Lead', { content_name: 'DBR Quiz Completed' });
+	    sessionStorage.setItem('dbr_lead_fired', '1');
+	  }
+	} catch (e) {
+	  fbq('track', 'Lead', { content_name: 'DBR Quiz Completed' });
+	}
 	</script>
 	<noscript><img height="1" width="1" style="display:none"
 	src="https://www.facebook.com/tr?id=764970315154958&ev=PageView&noscript=1"
