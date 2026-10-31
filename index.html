@@ -223,31 +223,35 @@
                 </div>
 
                 <div class="step hidden-step fade-in" data-step="11">
-                    <h2 class="text-3xl font-bold mb-3 text-white">Audit Complete</h2>
-                    <p class="text-slate-300 text-lg mb-8">We've calculated your revenue leakage score. Where should we send your full report?</p>
-                    <div class="space-y-5">
-                        <div>
-                            <input type="text" id="companyName" required placeholder="Company Name" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-5 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors text-lg">
-                        </div>
-                        <div>
-                            <input type="text" id="userName" required placeholder="Your First Name" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-5 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors text-lg">
-                        </div>
-                        <div>
-                            <input type="email" id="userEmail" required placeholder="Email Address" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-5 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors text-lg">
-                        </div>
-                        <div>
-                            <input type="tel" id="userPhone" required placeholder="Phone Number (for SMS report)" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-5 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors text-lg">
-                        </div>
-                        
-                        <button type="button" id="submitBtn" onclick="submitQuiz()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xl font-bold py-5 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)] transform hover:scale-[1.02] border border-blue-400/30">
-                            GENERATE MY REVENUE BLUEPRINT →
-                        </button>
-                        <p class="text-sm text-center text-slate-400 mt-4 flex justify-center items-center gap-2">
-                            <i class="fas fa-lock"></i> Your data is secure and confidential.
-                        </p>
-                    </div>
-                </div>
+    				<h2 class="text-3xl font-bold mb-3 text-white">Audit Complete</h2>
+    				<p class="text-slate-300 text-lg mb-8">We've calculated your revenue leakage score. Where should we send your full report?</p>
+    
+    				<div class="space-y-5">
+        				<!-- Error alert container for real-time validation feedback -->
+        				<div id="quizErrorMsg" class="hidden text-red-400 text-sm font-semibold bg-red-950/60 border border-red-500/50 p-4 rounded-xl text-left"></div>
 
+        				<div>
+            				<input type="text" id="companyName" required placeholder="Company Name" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-5 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors text-lg">
+        				</div>
+        				<div>
+            				<input type="text" id="userName" required placeholder="Your First Name" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-5 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors text-lg">
+        				</div>
+        				<div>
+            				<input type="email" id="userEmail" required placeholder="Business Email Address" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-5 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors text-lg">
+        				</div>
+        				<div>
+            				<input type="tel" id="userPhone" required placeholder="Phone Number (e.g. 555-123-4567)" class="w-full bg-slate-900 border border-slate-600 rounded-xl p-5 text-white placeholder-slate-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-colors text-lg">
+        				</div>
+        
+        				<button type="button" id="submitBtn" onclick="submitQuiz()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xl font-bold py-5 rounded-xl transition-all shadow-[0_0_20px_rgba(37,99,235,0.5)] transform hover:scale-[1.02] border border-blue-400/30">
+            				GENERATE MY REVENUE BLUEPRINT →
+        				</button>
+        				<p class="text-sm text-center text-slate-400 mt-4 flex justify-center items-center gap-2">
+            				<i class="fas fa-lock"></i> Your data is secure and confidential.
+        				</p>
+    				</div>
+				</div>
+				
             </form>
         </div> 
 
@@ -277,111 +281,200 @@
     </div> 
 
     <script>
-        // 1. Configuration
-        const answers = {};
-        let currentStep = 1;
-        const totalSteps = 11;
-        
-        // YOUR SPECIFIC GOOGLE APPS SCRIPT WEBHOOK URL
-        const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwHpsSCaH5IurgQlo7F6zE7zOOoawCBiRqnFEJGmplnaswoBxCzS-LdU4x6TjZ_y7pd/exec";
+	    // 1. Configuration
+    	const answers = {};
+    	let currentStep = 1;
+    	const totalSteps = 11;
+    
+	    // Required quiz question keys that must exist before submission
+    	const REQUIRED_QUIZ_KEYS = [
+        	'listSize', 'lastEngagement', 'method', 'cpl', 'ltv', 
+	        'barrier', 'format', 'capacity', 'offer', 'sms'
+	    ];
 
-        // Logic to Start Quiz (Hide Intro, Show Step 1)
-        function startQuiz() {
-            document.getElementById('introPage').style.display = 'none';
-            document.querySelector('[data-step="1"]').classList.remove('hidden-step');
-            document.getElementById('progressContainer').classList.remove('hidden-step');
-        }
+	    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwHpsSCaH5IurgQlo7F6zE7zOOoawCBiRqnFEJGmplnaswoBxCzS-LdU4x6TjZ_y7pd/exec";
 
-        // 2. Navigation Logic
-        function selectOption(step, key, value) {
-            // Save answer
-            answers[key] = value;
-            
-            // Move to next step
-            if (step < totalSteps) {
-                // Add a small delay for better UX (so they see the click)
-                setTimeout(() => {
-                    nextStep(step);
-                }, 200);
-            }
-        }
+	    function startQuiz() {
+    	    document.getElementById('introPage').style.display = 'none';
+        	document.querySelector('[data-step="1"]').classList.remove('hidden-step');
+        	document.getElementById('progressContainer').classList.remove('hidden-step');
+    	}
 
-        function nextStep(current) {
-            // Hide current step
-            document.querySelector(`[data-step="${current}"]`).classList.add('hidden-step');
-            
-            // Show next step
-            const next = current + 1;
-            const nextEl = document.querySelector(`[data-step="${next}"]`);
-            if (nextEl) {
-                nextEl.classList.remove('hidden-step');
-                
-                // Update Progress Bar
-                currentStep = next;
-                document.getElementById('currentStepNum').innerText = currentStep;
-                const percent = (currentStep / totalSteps) * 100;
-                document.getElementById('progressBar').style.width = percent + "%";
-            }
-        }
+	    function selectOption(step, key, value) {
+    	    answers[key] = value;
+        	if (step < totalSteps) {
+            	setTimeout(() => {
+                	nextStep(step);
+	            }, 200);
+    	    }
+    	}
 
-        // 3. Submission Logic
-        async function submitQuiz() {
-            const btn = document.getElementById('submitBtn');
-            const company = document.getElementById('companyName').value;
-            const name = document.getElementById('userName').value;
-            const email = document.getElementById('userEmail').value;
-            const phone = document.getElementById('userPhone').value;
+	    function nextStep(current) {
+    	    document.querySelector(`[data-step="${current}"]`).classList.add('hidden-step');
+        	const next = current + 1;
+        	const nextEl = document.querySelector(`[data-step="${next}"]`);
+        	if (nextEl) {
+            	nextEl.classList.remove('hidden-step');
+            	currentStep = next;
+            	document.getElementById('currentStepNum').innerText = currentStep;
+            	const percent = (currentStep / totalSteps) * 100;
+            	document.getElementById('progressBar').style.width = percent + "%";
+        	}
+    	}
 
-            // Simple Validation
-            if(!company || !name || !email || !phone) {
-                alert("Please fill in all fields to generate your report.");
-                return;
-            }
+	    // 2. Verification Helpers
+    	function validateEmail(email) {
+        	if (!email) return { valid: false, message: "Email is required." };
+        	const clean = email.trim().toLowerCase();
 
-            // Update UI to loading state
-            btn.innerText = "Analyzing Database...";
-            btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
+	        // Strict RFC 5322 regex syntax validation
+    	    const regex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+        	if (!regex.test(clean)) {
+            	return { valid: false, message: "Please provide a valid email format (e.g., name@company.com)." };
+        	}
 
-            // Add final data to answers object
-            answers['company'] = company;
-            answers['name'] = name;
-            answers['email'] = email;
-            answers['phone'] = phone;
+	        const [user, domain] = clean.split('@');
+    	    if (user.length < 2 || !domain.includes('.')) {
+        	    return { valid: false, message: "Please enter a valid, complete email address." };
+        	}
 
-            // Construct the Report URL (for redirect AND email)
-            const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-            const queryParams = new URLSearchParams(answers).toString();
-            const finalRedirectUrl = `audit-report.html?${queryParams}`;
-            const fullReportLink = baseUrl + finalRedirectUrl;
+	        const tld = domain.split('.').pop();
+    	    if (tld.length < 2) {
+        	    return { valid: false, message: "The domain extension (.com, .net, etc.) is invalid." };
+        	}
 
-            // Add report URL to payload for the backend script
-            answers['report_url'] = fullReportLink;
+	        // Known temporary/throwaway email providers
+    	    const disposableDomains = [
+        	    'mailinator.com', 'tempmail.com', 'guerrillamail.com', '10minutemail.com',
+            	'trashmail.com', 'throwawaymail.com', 'yopmail.com', 'sharklasers.com',
+            	'dispostable.com', 'fake.com', 'test.com', 'example.com', 'asdf.com'
+        	];
+        	if (disposableDomains.includes(domain)) {
+            	return { valid: false, message: "Temporary or test email addresses are not accepted." };
+        	}
 
-            // 4. Send Data to Google Script (Backend)
-            try {
-                // Using 'no-cors' mode is CRITICAL for Google Apps Script webhooks
-                await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    mode: 'no-cors', 
-                    headers: { 
-                        'Content-Type': 'application/json' 
-                    },
-                    body: JSON.stringify(answers)
-                });
-                
-                console.log("Data sent to backend successfully");
+ 	       // Dummy local names
+    	    const fakeUsernames = ['test', 'asdf', 'fake', 'admin', 'aaa', 'abc', '123', 'none', 'testing'];
+        	if (fakeUsernames.includes(user) || /^([a-z0-9])\1{2,}$/.test(user)) {
+            	return { valid: false, message: "Please enter a genuine business email." };
+        	}
 
-            } catch (e) {
-                console.error("Webhook submission error (non-fatal):", e);
-            }
+	        return { valid: true, clean };
+    	}
 
-            // 5. Redirect User (Delay slightly to ensure fetch fires)
-            setTimeout(() => {
-                window.location.href = finalRedirectUrl;
-            }, 1000); 
-        }
-    </script>
+	    function validatePhone(phone) {
+    	    if (!phone) return { valid: false, message: "Phone number is required." };
+        	const digits = phone.replace(/\D/g, '');
+
+	        if (digits.length < 10 || digits.length > 15) {
+    	        return { valid: false, message: "Please enter a valid phone number (at least 10 digits)." };
+        	}
+        	// Disallow identical repeating numbers (e.g. 0000000000, 1111111111)
+        	if (/^(\d)\1+$/.test(digits)) {
+            	return { valid: false, message: "Please enter a genuine phone number." };
+        	}
+        	// Disallow standard sequential filler (e.g. 1234567890)
+        	if (digits.includes('12345678') || digits.includes('98765432')) {
+            	return { valid: false, message: "Please enter a genuine phone number." };
+        	}
+
+	        return { valid: true, clean: digits };
+    	}
+
+	    function validateText(value, name, minLen = 2) {
+    	    if (!value || value.trim().length < minLen) {
+        	    return { valid: false, message: `Please enter a valid ${name} (at least ${minLen} characters).` };
+        	}
+        	const lower = value.trim().toLowerCase();
+        	if (['test', 'asdf', 'none', 'n/a', 'na', 'xxx', 'null'].includes(lower)) {
+            	return { valid: false, message: `Please provide an authentic ${name}.` };
+        	}
+        	return { valid: true, clean: value.trim() };
+    	}
+
+	    // 3. Submission Logic
+	    async function submitQuiz() {
+    	    const btn = document.getElementById('submitBtn');
+        	const errBox = document.getElementById('quizErrorMsg');
+        	errBox.classList.add('hidden');
+        	errBox.innerText = '';
+
+	        // A. Verify all prior quiz steps were answered
+    	    const missingKeys = REQUIRED_QUIZ_KEYS.filter(k => !answers[k]);
+        	if (missingKeys.length > 0) {
+            	errBox.innerText = "Please complete all quiz steps before generating your blueprint.";
+            	errBox.classList.remove('hidden');
+            	return;
+        	}
+
+	        // B. Validate Step 11 fields
+    	    const companyCheck = validateText(document.getElementById('companyName').value, "Company Name");
+        	if (!companyCheck.valid) {
+            	errBox.innerText = companyCheck.message;
+            	errBox.classList.remove('hidden');
+            	return;
+        	}
+
+	        const nameCheck = validateText(document.getElementById('userName').value, "First Name");
+    	    if (!nameCheck.valid) {
+        	    errBox.innerText = nameCheck.message;
+            	errBox.classList.remove('hidden');
+            	return;
+        	}
+
+	        const emailCheck = validateEmail(document.getElementById('userEmail').value);
+    	    if (!emailCheck.valid) {
+        	    errBox.innerText = emailCheck.message;
+            	errBox.classList.remove('hidden');
+            	return;
+        	}
+
+	        const phoneCheck = validatePhone(document.getElementById('userPhone').value);
+    	    if (!phoneCheck.valid) {
+        	    errBox.innerText = phoneCheck.message;
+            	errBox.classList.remove('hidden');
+            	return;
+        	}
+
+	        // Update UI
+    	    btn.innerText = "Analyzing Database...";
+        	btn.disabled = true;
+        	btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+	        // Store clean verified answers
+    	    answers['company'] = companyCheck.clean;
+        	answers['name'] = nameCheck.clean;
+        	answers['email'] = emailCheck.clean;
+        	answers['phone'] = phoneCheck.clean;
+
+	        // Generate a cryptographically random single-use verification token
+    	    const verificationToken = 'vtok_' + Math.random().toString(36).substring(2) + Date.now().toString(36);
+        	sessionStorage.setItem('dbr_auth_lead_token', verificationToken);
+
+	        const baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+    	    const queryParams = new URLSearchParams(answers).toString();
+        	const finalRedirectUrl = `audit-report.html?${queryParams}`;
+        	answers['report_url'] = baseUrl + finalRedirectUrl;
+
+	        // Backend submission
+    	    try {
+        	    await fetch(WEBHOOK_URL, {
+            	    method: 'POST',
+                	mode: 'no-cors', 
+                	headers: { 'Content-Type': 'application/json' },
+                	body: JSON.stringify(answers)
+            	});
+            	console.log("Data sent to backend successfully");
+        	} catch (e) {
+            	console.error("Webhook submission error (non-fatal):", e);
+        	}
+
+ 	       // Redirect
+    	    setTimeout(() => {
+        	    window.location.href = finalRedirectUrl;
+        	}, 1000); 
+    	}
+	</script>
 </body>
 </html>
 
