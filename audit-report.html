@@ -38,16 +38,35 @@
 	t.src=v;s=b.getElementsByTagName(e)[0];
 	s.parentNode.insertBefore(t,s)}(window, document,'script',
 	'https://connect.facebook.net/en_US/fbevents.js');
+
 	fbq('init', '764970315154958');
 	fbq('track', 'PageView');
-	try {
-	  if (!sessionStorage.getItem('dbr_lead_fired')) {
-	    fbq('track', 'Lead', { content_name: 'DBR Quiz Completed' });
-	    sessionStorage.setItem('dbr_lead_fired', '1');
-	  }
-	} catch (e) {
-	  fbq('track', 'Lead', { content_name: 'DBR Quiz Completed' });
-	}
+
+	// STRICT VERIFIED LEAD TRIGGER
+	(function() {
+	    try {
+	        const params = new URLSearchParams(window.location.search);
+	        const email = params.get('email');
+    	    const token = sessionStorage.getItem('dbr_auth_lead_token');
+        	const hasFired = sessionStorage.getItem('dbr_lead_fired');
+        
+	        // Simple regex to confirm email in URL is valid
+    	    const emailValid = email && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+
+	        // Only fire if visitor holds the single-use token from completing index.html
+    	    if (token && !hasFired && emailValid) {
+        	    fbq('track', 'Lead', {
+            	    content_name: 'DBR Quiz Completed',
+                	currency: 'USD'
+            	});
+	            // Mark as fired and consume the single-use token
+    	        sessionStorage.setItem('dbr_lead_fired', '1');
+        	    sessionStorage.removeItem('dbr_auth_lead_token');
+        	}
+	    } catch (e) {
+    	    console.error("Lead tracking exception:", e);
+    	}
+	})();
 	</script>
 	<noscript><img height="1" width="1" style="display:none"
 	src="https://www.facebook.com/tr?id=764970315154958&ev=PageView&noscript=1"
@@ -1057,7 +1076,8 @@
             sms: getParam('sms', 'no'),
             offer: getParam('offer', 'none'),
             barrier: getParam('barrier', 'time'),
-            capacity: getParam('capacity', 'yes')
+            capacity: getParam('capacity', 'yes'),
+    		format: getParam('format', 'crm')
         };
 
         const conversionRate = 0.05; 
